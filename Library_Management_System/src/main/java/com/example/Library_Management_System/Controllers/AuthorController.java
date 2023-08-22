@@ -9,12 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/author")
 public class AuthorController {
     @Autowired
-    AuthorService authorServiceObj ;
+    private AuthorService authorServiceObj ;
     @PostMapping("/addAuthor")
     public ResponseEntity addAuthor(@RequestBody Author author){
         try {
@@ -22,7 +24,7 @@ public class AuthorController {
             return new ResponseEntity(response, HttpStatus.CREATED);
         }
         catch (Exception e){
-            log.error("Author not added {}",e.getMessage());
+            log.error("Author could not get added {}",e.getMessage());
             return new ResponseEntity(e.getMessage(),HttpStatus.EXPECTATION_FAILED);
         }
     }
@@ -36,5 +38,9 @@ public class AuthorController {
             log.error("Failed to update name and penName {}",e.getMessage());
             return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
+    }
+    @GetMapping("/getAuthorsByAge")
+    public List<Author> getAuthorsByAgeGreater(@RequestParam("age")Integer age){
+        return authorServiceObj.getAuthorByAgeGreaterThan(age);
     }
 }
